@@ -1,10 +1,25 @@
+import 'reflect-metadata';
+import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
-import routes from './routes';
 
-const app = express();
+import initDb from './database/index';
+import schemaResolvers from './schemas/index';
 
-app.get('/', (req, res) => res.json({ message: 'Hello Word' }));
+const start = async () => {
+  await initDb();
+  console.log('Database created.');
 
-app.listen(3333, () => {
-  console.log('🚀 Server started on port 3333');
-});
+  const schema = await schemaResolvers();
+  const apolloServer = new ApolloServer({ schema });
+
+  const app = express();
+  apolloServer.applyMiddleware({ app });
+
+  app.listen(4000, () =>
+    console.log(
+      `Server started on http://localhost:4000${apolloServer.graphqlPath}`,
+    ),
+  );
+};
+
+start();
