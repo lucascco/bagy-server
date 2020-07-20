@@ -6,7 +6,9 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
+import { Order } from './Order';
 import { Address } from './Address';
 
 @Entity()
@@ -36,4 +38,8 @@ export class Customer extends BaseEntity {
   @OneToOne(() => Address)
   @JoinColumn()
   address: Address;
+
+  @Field(() => [Order])
+  @OneToMany(type => Order, order => order.customer)
+  orders: Order[];
 }

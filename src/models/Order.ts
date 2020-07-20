@@ -4,8 +4,7 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Customer } from './Customer';
 
@@ -15,10 +14,6 @@ export class Order extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number | null = null;
-
-  @Field(() => String)
-  @Column()
-  name: string;
 
   @Field(() => String)
   @Column('text')
@@ -33,7 +28,6 @@ export class Order extends BaseEntity {
   status: string;
 
   @Field(() => Customer)
-  @OneToOne(() => Customer)
-  @JoinColumn()
+  @ManyToOne(type => Customer, customer => customer.orders)
   customer: Customer;
 }

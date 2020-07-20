@@ -8,7 +8,7 @@ import { Customer } from '../models/Customer';
 export default class CustomerResolvers {
   @Query(() => [Customer])
   async allCostumers(): Promise<Customer[]> {
-    return Customer.find({ relations: ['address'] });
+    return Customer.find({ relations: ['address', 'orders'] });
   }
 
   @Mutation(() => Customer)
