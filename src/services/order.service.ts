@@ -16,7 +16,7 @@ export class OrderService {
     const { listProducts, idCustomer, installment } = reqOrder;
     const customer = await Customer.findOne({ where: { id: idCustomer } });
     if (!customer) {
-      throw Error(`Customer was not find.`);
+      throw Error(`Customer was not found.`);
     }
 
     const products = await Product.findByIds(listProducts.map(prod => prod.id));
@@ -25,10 +25,10 @@ export class OrderService {
     );
     listProductStatus.forEach(prodStatus => {
       if (!prodStatus.productDB) {
-        throw Error(`Product ${prodStatus.prodId} was not find.`);
+        throw Error(`Product ${prodStatus.prodId} was not found.`);
       }
       if (!prodStatus.hasInStock) {
-        throw Error(`Product ${prodStatus.productDB.name} have not in stock.`);
+        throw Error(`Product ${prodStatus.productDB.name} out of stock.`);
       }
     });
 
