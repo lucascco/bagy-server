@@ -1,6 +1,6 @@
 import { Query, Resolver, Mutation, Arg } from 'type-graphql';
-import { AddAddressInput } from '../interfaces/AddAddressInput';
-import { AddCustomerInput } from '../interfaces/AddCustomerInput';
+import { AddAddressInput } from './types-input/AddAddressInput';
+import { AddCustomerInput } from './types-input/AddCustomerInput';
 import { Address } from '../models/Address';
 import { Customer } from '../models/Customer';
 
@@ -12,7 +12,7 @@ export default class CustomerResolvers {
   }
 
   @Mutation(() => Customer)
-  async createCostumer(
+  async createCustomer(
     @Arg('customer') reqCustomer: AddCustomerInput,
     @Arg('address') reqAddress: AddAddressInput,
   ): Promise<Customer> {

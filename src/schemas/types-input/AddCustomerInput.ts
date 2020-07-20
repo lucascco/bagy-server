@@ -1,5 +1,5 @@
 import { InputType, Field } from 'type-graphql';
-import { Customer } from '../models/Customer';
+import { Customer } from '../../models/Customer';
 
 @InputType()
 export class AddCustomerInput implements Partial<Customer> {

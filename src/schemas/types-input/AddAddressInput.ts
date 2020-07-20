@@ -1,7 +1,8 @@
 import { InputType, Field } from 'type-graphql';
+import { Address } from '../../models/Address';
 
 @InputType()
-export class AddAddressInput {
+export class AddAddressInput implements Partial<Address> {
   @Field(() => String)
   street: string;
 
