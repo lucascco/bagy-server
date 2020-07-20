@@ -2,24 +2,24 @@ import { Query, Resolver, Mutation, Arg } from 'type-graphql';
 import { AddAddressInput } from '../interfaces/AddAddressInput';
 import { AddCostumersInput } from '../interfaces/AddCostumersInput';
 import { Address } from '../models/Address';
-import { Costumer } from '../models/Customer';
+import { Customer } from '../models/Customer';
 
 @Resolver()
-export default class CostumerResolvers {
-  @Query(() => [Costumer])
-  async allCostumers(): Promise<Costumer[]> {
-    return Costumer.find({ relations: ['address'] });
+export default class CustomerResolvers {
+  @Query(() => [Customer])
+  async allCostumers(): Promise<Customer[]> {
+    return Customer.find({ relations: ['address'] });
   }
 
-  @Mutation(() => Costumer)
+  @Mutation(() => Customer)
   async createCostumer(
     @Arg('costumer') reqCostumer: AddCostumersInput,
     @Arg('address') reqAddress: AddAddressInput,
-  ): Promise<Costumer> {
+  ): Promise<Customer> {
     const addressCreation = Address.create(reqAddress);
     const addressCreated = await addressCreation.save();
 
-    const costumerCreation = Costumer.create({
+    const costumerCreation = Customer.create({
       ...reqCostumer,
       address: addressCreated,
     });

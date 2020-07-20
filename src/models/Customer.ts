@@ -11,7 +11,7 @@ import { Address } from './Address';
 
 @Entity()
 @ObjectType()
-export class Costumer extends BaseEntity {
+export class Customer extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number | null = null;
