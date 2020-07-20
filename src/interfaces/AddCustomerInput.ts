@@ -1,8 +1,8 @@
 import { InputType, Field } from 'type-graphql';
-import { Costumer } from '../models/Customer';
+import { Customer } from '../models/Customer';
 
 @InputType()
-export class AddCostumersInput implements Partial<Costumer> {
+export class AddCustomerInput implements Partial<Customer> {
   @Field(() => String)
   name: string;
 
