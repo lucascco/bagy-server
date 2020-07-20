@@ -1,7 +1,7 @@
 {
   "type": "sqlite",
-  "database": "./src/database/database.sqlite3",
+  "database": "./src/shared/infra/database/database.sqlite3",
   "entities": [
-    "./src/models/index.ts"
+    "./src/shared/infra/http/graphql/entities/index.ts"
   ]
 }
