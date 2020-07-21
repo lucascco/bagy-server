@@ -16,7 +16,7 @@ Services | modules/(name_module)/services | Executa um bound de ações com regr
 Types Input | modules/(name_module)/schemas/types-input | Define um DTO para envio de dados para uma Mutation no graphql
 Fake | modules/(name_module)/**/fakes | Define classes fakes para execucão de testes
 
-##SOLID
+## SOLID
 Busquei atender alguns principios do SOLID como Principio da Responsabilidade Única e o Princípio da Substituição de Liskov na dependecia dos services com os repositorios.
 
 ## Executando o projeto
@@ -44,8 +44,92 @@ Agora é só acessar http://localhost:4000/graphql do seu navegador.
 
 `yarn dev:server` or `npm dev:server`
 
-Agora é só acessar http://localhost:4000/graphql do seu navegador.
+Agora é só acessar http://localhost:8080/graphql do seu navegador.
 
+## Data base
+O banco de dados ja vem pre populado com dois usuarios de testes e alguns produtos.
+
+### Mutation de criar order
+*testEmailUrl*: é o link para o email de teste no https://ethereal.email/
+```
+mutation {
+  createOrder(order:{
+    idCustomer: 1,
+    installment: 2,
+    listProducts: [
+      {
+        id: 1,
+        qtt: 1
+      }
+    ]
+  }) {
+    testEmailUrl
+    order {
+      id
+      dtOrder
+      installment
+      customer {
+        name
+      }
+      status
+    }
+    products { id name qttStock}
+  }
+}
+```
+
+#### Exemplo de resposta
+
+```json
+{
+  "data": {
+    "createOrder": {
+      "testEmailUrl": "https://ethereal.email/message/XxcQDYg3UQaGbOu0XxcQEQWftlH5NRHQAAAAAa.K5zuJeAuH8GgnnSaJAec",
+      "order": {
+        "id": "1",
+        "dtOrder": "2020-07-21 12:55:56",
+        "installment": 2,
+        "customer": {
+          "name": "User Test 1"
+        },
+        "status": "approved"
+      },
+      "products": [
+        {
+          "id": "1",
+          "name": "Notebook Mac 13",
+          "qttStock": 9
+        }
+      ]
+    }
+  }
+}
+```
+
+### Querys
+
+#### Get all Clientes
+```
+{
+  allCostumers {
+		id
+    name
+    orders {
+      id
+      dtOrder
+      status
+    }
+  }
+}
+```
+#### Get all Produtos
+```
+{
+  allProducts {
+    id name price qttStock
+  }
+}
+```
 ## Testes Unitários
 
 Foquei os testes unitários no service de Order, pois concentra o core da aplicação, com a responsabilidade de registrar uma compra para um usuário e enivar um email.
