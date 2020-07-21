@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Arg } from 'type-graphql';
 import { ProductRepository } from '@modules/product/infra/typeorm/repository/ProductRepository';
 import { CustomerRepository } from '@modules/customer/infra/typeorm/repository/CustomerRepository';
+import EtherealMailProvider from '@shared/container/providers/MailProvider/implementations/EtherealMailProvider';
 import { TypeReturnCreateOrder } from '../entities/TypeReturnCreateOrder';
 import { AddOrderInput } from './types-input/AddOrderInput';
 import { OrderService } from '../services/order.service';
@@ -14,6 +15,7 @@ export default class OrderResolvers {
     new OrderProductRepository(),
     new ProductRepository(),
     new CustomerRepository(),
+    new EtherealMailProvider(),
   );
 
   @Mutation(() => TypeReturnCreateOrder)

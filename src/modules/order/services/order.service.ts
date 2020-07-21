@@ -4,6 +4,8 @@ import { Product } from '@modules/product/entities/Product';
 import { IProductStatus } from '@modules/product/interfaces/IProductStatus';
 import IProductRepository from '@modules/product/repository/IProductRepository';
 import { ICustomerRepository } from '@modules/customer/repository/ICustomerRepository';
+import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+import { Customer } from '@modules/customer/entities/Customer';
 import { Order } from '../entities/Order';
 import IOrderRepository from '../repository/IOrderRepository';
 import IOrderProductRepository from '../repository/IOrderProductRepository';
@@ -14,11 +16,16 @@ export class OrderService {
     private orderProductRepository: IOrderProductRepository,
     private productRepository: IProductRepository,
     private customerRepository: ICustomerRepository,
+    private mailProvider: IMailProvider,
   ) {}
 
   async execute(
     reqOrder: AddOrderInput,
-  ): Promise<{ order: Order; products: Product[] }> {
+  ): Promise<{
+    order: Order;
+    products: Product[];
+    testEmailUrl: string;
+  }> {
     const { listProducts, idCustomer, installment } = reqOrder;
     const customer = await this.customerRepository.findeById(idCustomer);
     if (!customer) {
@@ -44,6 +51,7 @@ export class OrderService {
       customer,
       installment,
     );
+    const testEmailUrl = await this.sendEmailOrder(customer, orderSaved);
     await this.productRepository.updateStock(listProductStatus);
     await this.orderProductRepository.createOrderProduct(
       orderSaved,
@@ -53,6 +61,7 @@ export class OrderService {
       orderSaved,
     );
     return {
+      testEmailUrl: typeof testEmailUrl === 'string' ? testEmailUrl : '',
       order: orderSaved,
       products: orderProducts.map(orderProd => orderProd.product),
     };
@@ -70,6 +79,19 @@ export class OrderService {
       qttWanted: prodInOrder.qtt,
       prodId: prodInOrder.id,
     };
+  }
+
+  private async sendEmailOrder(
+    customer: Customer,
+    order: Order,
+  ): Promise<string | boolean> {
+    const { email } = customer;
+    const resultMessateUrl = await this.mailProvider.sendEmail(
+      email,
+      `Order approved ${order.id}`,
+      `Order ${order.id}`,
+    );
+    return resultMessateUrl;
   }
 
   public checkSotckAvailable(

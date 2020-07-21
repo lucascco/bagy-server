@@ -2,6 +2,7 @@ import { Repository, EntityRepository, getRepository } from 'typeorm';
 import IProductRepository from '@modules/product/repository/IProductRepository';
 import { Product } from '@modules/product/entities/Product';
 import { IProductStatus } from '@modules/product/interfaces/IProductStatus';
+import { AddProductInput } from '@modules/product/schemas/types-input/AddProductInput';
 
 @EntityRepository(Product)
 export class ProductRepository implements IProductRepository {
@@ -9,6 +10,11 @@ export class ProductRepository implements IProductRepository {
 
   constructor() {
     this.ormRepository = getRepository(Product);
+  }
+
+  create(productIntput: AddProductInput): Promise<Product> {
+    const productCreation = this.ormRepository.create(productIntput);
+    return productCreation.save();
   }
 
   public async findByListIds(listIds: number[]): Promise<Product[]> {

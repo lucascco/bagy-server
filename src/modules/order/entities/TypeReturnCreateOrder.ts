@@ -9,4 +9,7 @@ export class TypeReturnCreateOrder {
 
   @Field(() => [Product])
   products: Product[];
+
+  @Field(() => String)
+  testEmailUrl: string;
 }

@@ -1,6 +1,7 @@
 import { Product } from '@modules/product/entities/Product';
 import { FakeProductRepository } from '@modules/product/repository/fakes/FakeProductRepository';
 import { FakeCustomerRepository } from '@modules/customer/repository/fakes/FakeCustomerRepository';
+import FakeMailProvider from '@shared/container/providers/MailProvider/fakes/FakeMailProvider';
 import { FakeOrderProductRepository } from '../repository/fakes/FakeOrderProductRepository';
 import { FakeOrderRepository } from '../repository/fakes/FakeOrderRepository';
 import { OrderService } from './order.service';
@@ -9,6 +10,7 @@ describe('Order Service', () => {
   let orderService: OrderService;
   let fakeProductRepository: FakeProductRepository;
   let fakeCustomerRepository: FakeCustomerRepository;
+  let fakeMailProvider: FakeMailProvider;
 
   const generateCustomers = () => {
     fakeCustomerRepository.create(
@@ -57,6 +59,7 @@ describe('Order Service', () => {
   beforeEach(() => {
     fakeProductRepository = new FakeProductRepository();
     fakeCustomerRepository = new FakeCustomerRepository();
+    fakeMailProvider = new FakeMailProvider();
     generateProducts();
     generateCustomers();
     orderService = new OrderService(
@@ -64,10 +67,12 @@ describe('Order Service', () => {
       new FakeOrderProductRepository(),
       fakeProductRepository,
       fakeCustomerRepository,
+      fakeMailProvider,
     );
   });
 
   it('Should be create one order', async () => {
+    const sendEmail = spyOn(fakeMailProvider, 'sendEmail');
     const resOrder = await orderService.execute({
       idCustomer: 1,
       installment: 3,
@@ -77,6 +82,7 @@ describe('Order Service', () => {
       ],
     });
     const resExpect = {
+      testEmailUrl: '',
       order: {
         id: 1,
         customer: { name: 'User Test 1', id: 1 },
@@ -89,6 +95,11 @@ describe('Order Service', () => {
         { id: 2, name: 'Notebook Dell', qttStock: 8 },
       ],
     };
+    expect(sendEmail).toHaveBeenCalledWith(
+      'user@gmail.com',
+      `Order approved ${resExpect.order.id}`,
+      `Order ${resExpect.order.id}`,
+    );
     expect(resOrder).toMatchObject(resExpect);
   });
 
