@@ -49,7 +49,46 @@ Agora é só acessar http://localhost:8080/graphql do seu navegador.
 ## Data base
 O banco de dados ja vem pre populado com dois usuarios de testes e alguns produtos.
 
-### Mutation de criar order
+### Mutation - Create Customer
+```
+mutation createCustomer {
+  createCustomer(
+    customer: {
+      name: "User Test 2",
+      email: "user_test_2@gmail.com",
+      cpf: "678676876",
+      dtBirth: "1991-02-11",
+    },
+    address: {
+      street: "Rua Necessio dos Santos"
+      neighborhood: "SJB"
+      city: "Belo Horizonte"
+			state: "MG"
+      country: "BR"
+      number: "110"
+      cep: "31515040"
+    }
+  ) { name id }
+}
+```
+
+### Mutation - Create Product
+```
+mutation createProduct {
+  createProduct(
+    product: {
+      name: "Notebook Mac 13",
+      image: "path_image",
+      description: "Notebook da Apple de 13 polegdas",
+      weight: 3,
+      price: 8000,
+      qttStock: 10
+    }
+  ) { name, qttStock, price }
+}
+```
+
+### Mutation - Create Order
 *testEmailUrl*: é o link para o email de teste no https://ethereal.email/
 ```
 mutation {
@@ -79,7 +118,6 @@ mutation {
 ```
 
 #### Exemplo de resposta
-
 ```json
 {
   "data": {
