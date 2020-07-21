@@ -11,9 +11,9 @@ const start = async () => {
   const app = express();
   const apolloServer = await initGraphQl(app);
 
-  app.listen(4000, () =>
+  app.listen(8080, () =>
     console.log(
-      `Server started on http://localhost:4000${apolloServer.graphqlPath}`,
+      `Server started on http://localhost:8080${apolloServer.graphqlPath}`,
     ),
   );
 };
