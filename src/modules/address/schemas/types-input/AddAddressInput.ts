@@ -3,6 +3,8 @@ import { Address } from '@modules/address/entities/Address';
 
 @InputType()
 export class AddAddressInput implements Partial<Address> {
+  id?: number;
+
   @Field(() => String)
   street: string;
 

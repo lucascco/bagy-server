@@ -3,6 +3,8 @@ import { InputType, Field } from 'type-graphql';
 
 @InputType()
 export class AddProductInput implements Partial<Product> {
+  id?: number;
+
   @Field(() => String)
   name: string;
 

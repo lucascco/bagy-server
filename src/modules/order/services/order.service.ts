@@ -2,7 +2,7 @@ import { AddOrderInput } from '@modules/order/schemas/types-input/AddOrderInput'
 import { ProductInOrder } from '@modules/product/schemas/types-input/ProductInOrder';
 import { Product } from '@modules/product/entities/Product';
 import { IProductStatus } from '@modules/product/interfaces/IProductStatus';
-import IProductRepository from '@modules/product/repository/fakes/IProductRepository';
+import IProductRepository from '@modules/product/repository/IProductRepository';
 import { ICustomerRepository } from '@modules/customer/repository/ICustomerRepository';
 import { Order } from '../entities/Order';
 import IOrderRepository from '../repository/IOrderRepository';
@@ -72,7 +72,7 @@ export class OrderService {
     };
   }
 
-  private checkSotckAvailable(
+  public checkSotckAvailable(
     prodInOrder: ProductInOrder,
     product: Product | undefined,
   ): boolean {
