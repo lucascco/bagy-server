@@ -1,7 +1,8 @@
 {
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     "extends": [
         "airbnb-base",
@@ -23,6 +24,7 @@
         "prettier"
     ],
     "rules": {
+      "no-useless-constructor": "off",
       "import/prefer-default-export": "off",
       "class-methods-use-this": "off",
       "prettier/prettier": "error",

@@ -1,11 +1,13 @@
 import { Query, Resolver, Mutation, Arg } from 'type-graphql';
-import { Address } from '@modules/address/entities/Address';
 import { Customer } from '@modules/customer/entities/Customer';
 import { AddAddressInput } from '@modules/address/schemas/types-input/AddAddressInput';
+import { CustomerRepository } from '../infra/typeorm/repository/CustomerRepository';
 import { AddCustomerInput } from './types-input/AddCustomerInput';
 
 @Resolver()
 export default class CustomerResolvers {
+  private customerRepository: CustomerRepository = new CustomerRepository();
+
   @Query(() => [Customer])
   async allCostumers(): Promise<Customer[]> {
     return Customer.find({ relations: ['address', 'orders'] });
@@ -16,15 +18,6 @@ export default class CustomerResolvers {
     @Arg('customer') reqCustomer: AddCustomerInput,
     @Arg('address') reqAddress: AddAddressInput,
   ): Promise<Customer> {
-    const addressCreation = Address.create(reqAddress);
-    const addressCreated = await addressCreation.save();
-
-    const customerCreation = Customer.create({
-      ...reqCustomer,
-      address: addressCreated,
-    });
-
-    const customer = await customerCreation.save();
-    return customer;
+    return this.customerRepository.create(reqAddress, reqCustomer);
   }
 }
