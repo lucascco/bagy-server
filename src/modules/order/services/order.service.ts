@@ -19,9 +19,7 @@ export class OrderService {
     private mailProvider: IMailProvider,
   ) {}
 
-  async execute(
-    reqOrder: AddOrderInput,
-  ): Promise<{
+  async execute(reqOrder: AddOrderInput): Promise<{
     order: Order;
     products: Product[];
     testEmailUrl: string;
@@ -32,9 +30,12 @@ export class OrderService {
       throw Error(`Customer was not found.`);
     }
 
-    const products = await this.productRepository.findByListIds(
-      listProducts.map(prod => prod.id),
-    );
+    const prodIds = [];
+    for (let i = 0; i < listProducts.length; i += 1) {
+      prodIds.push(listProducts[i].id);
+    }
+    const products = await this.productRepository.findByListIds(prodIds);
+
     const listProductStatus = listProducts.map(prodInOrder =>
       this.createListProductStatus(prodInOrder, products),
     );
@@ -89,7 +90,7 @@ export class OrderService {
     const resultMessateUrl = await this.mailProvider.sendEmail(
       email,
       `Order approved ${order.id}`,
-      `Order ${order.id}`,
+      order.id,
     );
     return resultMessateUrl;
   }
@@ -101,6 +102,8 @@ export class OrderService {
     if (!product) {
       return false;
     }
-    return prodInOrder.qtt <= product.qttStock;
+    const { qttStock: qttInStock } = product;
+    const { qtt: qttToBuy } = prodInOrder;
+    return qttInStock;
   }
 }
